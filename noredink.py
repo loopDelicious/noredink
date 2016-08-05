@@ -1,12 +1,13 @@
 """ prompt user for number of questions for a quiz, and return a list of question_ids per preferred rules """
 
-import sys
+# import random
 
 def prompt_user():
     """ prompt user for number of questions """
 
     try:
         number_questions = int(raw_input("How many questions would you like in your quiz? (enter number) >> "))
+
     except ValueError:
         print "Sorry, please try again."
 
@@ -19,6 +20,7 @@ def generate_questions(num):
 
     with open("nri-backend-takehome/questions.csv") as file:
         questions = file.read().split(',')
+        print questions
 
     # create nested dictionaries
 
@@ -46,9 +48,9 @@ def generate_questions(num):
 
     for line in questions:
 
-        strand_name = question[1]
-        standard_name = question[3]
-        question_id = question[4]
+        strand_name = line[1]
+        standard_name = line[3]
+        question_id = line[4]
 
         if strand_name in question_dict:
             if standard_name in question_dict[strand_name]:
@@ -56,11 +58,20 @@ def generate_questions(num):
             else:
                 question_dict[strand_name][standard_name] = [question_id]
         else:
-            question_dict[strand_name] = dict(standard_name)
-            question_dict[strand_name][standard_name] = [question_id]
+            question_dict[strand_name] = dict([(standard_name,[question_id])])
 
-    # loop through nested dictionaries to pull from strand and standards equally
+
+    # loop through nested dictionaries to pull from strands and standards equally
     results = []
+
+    # prefer questions that have not yet been answered
+    # not_used = set()    # set for unique values and constant lookup time
+    # for line in usage:
+    #     if line[3] is None:
+    #         not_used.add(line[1])
+    # if num >= 1:
+    #     results.append(random.choice(not_used))
+    #   still need to account for the strand / standard this question draws from
 
     while len(results) < num:
 
@@ -72,7 +83,7 @@ def generate_questions(num):
     return results
 
 
-if __name __ = "__main__":
+if __name__ == '__main__':
 
     number_questions = prompt_user()
     generate_questions(number_questions)
