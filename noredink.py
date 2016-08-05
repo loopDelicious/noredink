@@ -20,56 +20,50 @@ def generate_questions(num):
     with open("nri-backend-takehome/questions.csv") as file:
         questions = file.read().split(',')
 
-        # create nested dictionaries
+    # create nested dictionaries
 
-        # question_dict = {
-        #                   strand_name = {
-        #                                   standard_name: [question_ids]
-        #                                   },
-        #                   },
+    # question_dict = {
+    #                   strand_name = {
+    #                                   standard_name: [question_ids]
+    #                                   },
+    #                   },
 
-        # question_dict = {
-        #                   Nouns = {
-        #                               Common:     [1,2],
-        #                               Abstract:   [3],
-        #                               Proper:     [4,5,6]
-        #                              },
-        #                   Verbs = {
-        #                               Action:     [7,8],
-        #                               Transitive: [9,10,11],
-        #                               Reflexive:  [12]
-        #                            }
-        #                   }
+    # question_dict = {
+    #                   Nouns = {
+    #                               Common:     [1,2],
+    #                               Abstract:   [3],
+    #                               Proper:     [4,5,6]
+    #                              },
+    #                   Verbs = {
+    #                               Action:     [7,8],
+    #                               Transitive: [9,10,11],
+    #                               Reflexive:  [12]
+    #                            }
+    #                   }
 
-        question_dict = {}
+    # construct the nested dicts
+    question_dict = {}
 
-        for line in questions:
+    for line in questions:
 
-            strand_name = question[1]
-            standard_name = question[3]
-            question_id = question[4]
+        strand_name = question[1]
+        standard_name = question[3]
+        question_id = question[4]
 
-
-            if strand_name not in question_dict:
-                question_dict =
-
-            if strand_name in question_dict:
-
-
-                if standard_name in question_dict[strand_name]:
-                    question_dict[strand_name][standard_name].append(question_id)
-                else:
-                    question_dict[strand_name][standard_name] = [question_id]
-
-
+        if strand_name in question_dict:
+            if standard_name in question_dict[strand_name]:
+                question_dict[strand_name][standard_name].append(question_id)
             else:
                 question_dict[strand_name][standard_name] = [question_id]
+        else:
+            question_dict[strand_name] = dict(standard_name)
+            question_dict[strand_name][standard_name] = [question_id]
 
+    # loop through nested dictionaries to pull from strand and standards equally
     results = []
 
     while len(results) < num:
 
-        # loop over dictionary to pull from strand and standards equally
         for strand_name in question_dict:
             for standard_name in question_dict[strand_name]:
                 for question in question_dict[strand_name][standard_name]:
