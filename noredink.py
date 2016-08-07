@@ -19,8 +19,11 @@ def generate_questions(num):
         usage = file.read().split(',')
 
     with open("nri-backend-takehome/questions.csv") as file:
-        questions = file.read().split(',')
-        print questions
+        questions = file.read().split('\n')
+        question_list = []
+        for question in questions:
+            line = question.split(',')
+            question_list.append(line)
 
     # create nested dictionaries
 
@@ -46,7 +49,7 @@ def generate_questions(num):
     # construct the nested dicts
     question_dict = {}
 
-    for line in questions:
+    for line in question_list[1:]:
 
         strand_name = line[1]
         standard_name = line[3]
@@ -60,7 +63,6 @@ def generate_questions(num):
         else:
             question_dict[strand_name] = dict([(standard_name,[question_id])])
 
-
     # loop through nested dictionaries to pull from strands and standards equally
     results = []
 
@@ -73,20 +75,18 @@ def generate_questions(num):
     #     results.append(random.choice(not_used))
     #   still need to account for the strand / standard this question draws from
 
-    while len(results) < num:
-
-        for strand_name in question_dict:
-            for standard_name in question_dict[strand_name]:
-                for question in question_dict[strand_name][standard_name]:
-                    results.append(question_id)
-
-    return results
+    for strand_name in question_dict:
+        for standard_name in question_dict[strand_name]:
+            for question in question_dict[strand_name][standard_name]:
+                results.append(question)
+                if len(results) >= num:
+                    return results
 
 
 if __name__ == '__main__':
 
     number_questions = prompt_user()
-    generate_questions(number_questions)
+    print generate_questions(number_questions)
 
 
 # The expected output is to display a list of question_ids.
